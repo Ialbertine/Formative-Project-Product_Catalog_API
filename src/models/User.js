@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Password is required"],
       minlength: [6, "Password must be at least 6 characters"],
-      select: false // Don't include password in query results by default
+      select: false 
     },
     role: {
       type: String,
@@ -57,9 +57,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Password encryption middleware - runs before saving to database
 userSchema.pre("save", async function(next) {
-  // Only hash the password if it's been modified (or is new)
   if (!this.isModified("password")) {
     return next();
   }
@@ -76,7 +74,6 @@ userSchema.pre("save", async function(next) {
   }
 });
 
-// Method to check if entered password matches hashed password
 userSchema.methods.matchPassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
@@ -90,12 +87,9 @@ userSchema.methods.generateAuthToken = function() {
   );
 };
 
-// Method to generate and hash password reset token
 userSchema.methods.getResetPasswordToken = function() {
-  // Generate token
+  // Generate token and hash it
   const resetToken = crypto.randomBytes(20).toString('hex');
-
-  // Hash token and set to resetPasswordToken field
   this.resetPasswordToken = crypto
     .createHash('sha256')
     .update(resetToken)
@@ -110,9 +104,7 @@ userSchema.methods.getResetPasswordToken = function() {
 // Virtual for user's full address
 userSchema.virtual('fullAddress').get(function() {
   if (!this.address || !this.address.street) return '';
-  
   return `${this.address.street}, ${this.address.city}, ${this.address.state} ${this.address.zipCode}, ${this.address.country}`;
 });
 
-// Remember to use the new syntax to avoid the OverwriteModelError
 module.exports = mongoose.models.User || mongoose.model("User", userSchema);
