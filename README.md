@@ -1,5 +1,5 @@
-### Product Catalog API 
-# Description
+# Product Catalog API 
+## Description
 The Product Catalog API is a robust and scalable backend solution designed for e-commerce platforms. It provides a comprehensive set of features to manage products, categories, inventory, user accounts, and reports. Built with Node.js and Express.js, this API is optimized for performance, security, and ease of use. It integrates with MongoDB for efficient data storage and retrieval, ensuring seamless handling of large-scale e-commerce operations.
 
 ## Key features include:
@@ -21,19 +21,19 @@ This API is designed to besecure, and easy to integrate with frontend applicatio
 ## Installation
 To set up the Product Catalog API e-commerce locally, follow these steps:
 
-# Clone the Repository:
+## Clone the Repository:
 
 ```bash
 git clone https://github.com/your-username/product-catalog-api.git
 cd product-catalog-api
 ``` 
-# Install Dependencies:
+## Install Dependencies:
 
 ```bash
 npm install
 ```
 
-# Set Up Environment Variables:
+### Set Up Environment Variables:
 - Create a .env file in the root directory.
 
 ```bash
@@ -43,18 +43,18 @@ MONGO_URI=mongodb://localhost:27017/product_catalog
 JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRE=30d
 ```
-# Start the Server:
+### Start the Server:
 
 ```bash
 npm run dev
 ```
-# For production:
+### For production:
 
 ```bash
 #Access the API:
 The API will be running at http://localhost:5000.
 ```
-## Configuration
+### Configuration
 The API is configured using environment variables. Key configurations include:
 
 - PORT: The port on which the server runs (default: 5000).
@@ -68,7 +68,7 @@ The API is configured using environment variables. Key configurations include:
 ## API Endpoints
 The API provides the following endpoints:
 
-# Products
+### Products
 ```bash
 GET /api/products  #Retrieve all products.
 
@@ -80,7 +80,7 @@ PUT /api/products/:id #Update a product.
 
 DELETE /api/products/:id #Delete a product.
 ```
-# Categories
+### Categories
 ```bash
 GET /api/categories #Retrieve all categories.
 
@@ -92,7 +92,7 @@ PUT /api/categories/:id #Update a category.
 
 DELETE /api/categories/:id #Delete a category.
 ```
-# Inventory
+### Inventory
 ```bash
 GET /api/inventory #Retrieve inventory details.
 
@@ -105,7 +105,7 @@ Reports
 GET /api/reports #Generate sales or inventory reports.
 ```
 
-# Users
+### Users
 ```bash
 POST /api/users/register #Register a new user.
 
@@ -124,7 +124,7 @@ The API uses JSON Web Tokens (JWT) for authentication. To access protected route
 - Include the token in the Authorization header of subsequent requests:
 
 - Authorization: Bearer <your_jwt_token>
-# Rate Limiting
+## Rate Limiting
 To prevent abuse, the API enforces rate limiting:
 - Limit: 100 requests per 15 minutes.
 - Response: If the limit is exceeded, the API returns: json
@@ -164,7 +164,7 @@ To test the API:
 - Verify responses and error handling.
 
 
-# How can you access it to contribute
+## How you can access it to contribute
 
 - Fork the repository.
 - Create a new branch:
@@ -177,3 +177,5 @@ git push origin feature/your-feature-name
 
 #Open a pull request.
 ```
+
+## Click Here to the postman Link: [Here](https://documenter.getpostman.com/view/41987133/2sAYkLkwGt#0da05474-c560-4e72-8306-9dab0269bfe2)
