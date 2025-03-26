@@ -18,7 +18,6 @@ const userRoutes = require('./routes/userRoutes');
 // Load environment variables
 dotenv.config();
 
-// Initialize express app
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -27,7 +26,6 @@ app.get('/', (req, res) => {
 });
 
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -44,6 +42,7 @@ app.use('/api', apiLimiter);
 
 // Connect to MongoDB
 connectDB();
+
 
 // Routes
 app.use('/api/products', productRoutes);

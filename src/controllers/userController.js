@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { generateAccessToken, generateRefreshToken } = require('../middleware/auth');
 
 // POST /api/users/register this is for register
 const registerUser = async (req, res) => {
@@ -68,9 +69,10 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Find user and select password for comparison
     const user = await User.findOne({ email }).select('+password');
 
-    //this Check if user exists
+    // Check if user exists
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -88,27 +90,38 @@ const loginUser = async (req, res) => {
       });
     }
 
+    // Generate access and refresh tokens
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    // Update last login
     user.lastLogin = Date.now();
     await user.save();
 
-    // Generate JWT token
-    const token = user.generateAuthToken();
+    // Prepare user response (exclude sensitive information)
+    const userResponse = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phoneNumber: user.phoneNumber
+    };
 
+    // Send comprehensive login response
     res.status(200).json({
-      success: true,
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        phoneNumber: user.phoneNumber
+      message: 'Login successful',
+      user: userResponse,
+      tokens: {
+        accessToken,
+        refreshToken
       }
     });
+
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({
       success: false,
-      message: 'there is error logging in',
+      message: 'Error logging in',
       error: error.message
     });
   }

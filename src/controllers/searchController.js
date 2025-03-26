@@ -119,11 +119,32 @@ const searchByVariants = async (req, res) => {
 
     const query = { variants: { $elemMatch: {} } };
     if (size) query.variants.$elemMatch.size = size;
-    if (color) query.variants.$elemMatch.color = color;
+    if (color) query.variants.$elemMatch.color = { $regex: new RegExp(`^${color}$`, 'i') }; // Case-insensitive match
     if (inStock === 'true') query.variants.$elemMatch.stock = { $gt: 0 };
 
+    // Find products that have at least one matching variant
     const products = await Product.find(query).populate('category', 'name');
-    res.status(200).json(products);
+
+    // Extract and return only the matching variants with product info
+    const results = products.flatMap(product => {
+      const matchingVariants = product.variants.filter(variant => {
+        const sizeMatch = !size || variant.size === size;
+        const colorMatch = !color || variant.color.toLowerCase() === color.toLowerCase();
+        const stockMatch = inStock !== 'true' || variant.stock > 0;
+        return sizeMatch && colorMatch && stockMatch;
+      });
+
+      return matchingVariants.map(variant => ({
+        productId: product._id,
+        productName: product.name,
+        productImage: product.image,
+        productPrice: product.price,
+        category: product.category,
+        ...variant.toObject()
+      }));
+    });
+
+    res.status(200).json(results);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });

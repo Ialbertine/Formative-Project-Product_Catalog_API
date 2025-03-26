@@ -1,4 +1,3 @@
-// adminController.js
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
@@ -8,8 +7,8 @@ const getAllUsers = async (req, res) => {
     const users = await User.find({}).select('-password');
     res.status(200).json(users);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching users:', error);
+    res.status(500).json({ message: 'Server error while fetching users' });
   }
 };
 
@@ -22,39 +21,53 @@ const deleteUser = async (req, res) => {
     }
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Server error while deleting user' });
   }
 };
 
 // Create an admin user (for initial setup)
 const createAdminUser = async () => {
   try {
-    const adminExists = await User.findOne({ email: 'admin@example.com' });
+    console.log('Checking if admin exists...');
+    const adminExists = await User.findOne({ email: process.env.ADMIN_EMAIL });
+    
     if (adminExists) {
-      console.log('Admin user already exists');
+      console.log('Admin already exists:', adminExists);
       return;
     }
 
+    console.log('Creating admin user...');
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash('admin123', salt);
+    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, salt);
 
-    const adminUser = new User({
+    const adminUser = await User.create({
       name: 'Admin',
-      email: 'admin@example.com',
+      email: process.env.ADMIN_EMAIL,
       password: hashedPassword,
       role: 'admin',
+      // ... (other fields)
     });
 
-    await adminUser.save();
-    console.log('Admin user created successfully');
+    console.log('Admin created successfully:', adminUser);
   } catch (error) {
-    console.error('Error creating admin user:', error);
+    console.error('❌ Admin creation failed:', error);
+    throw error; // Ensure the error propagates
   }
 };
+
+const initializeAdmin = async () => {
+  try {
+    await createAdminUser();
+  } catch (error) {
+    console.error('Error initializing admin:', error);
+  }
+};
+
 
 module.exports = {
   getAllUsers,
   deleteUser,
   createAdminUser,
+  initializeAdmin,
 };

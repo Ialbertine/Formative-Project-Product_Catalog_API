@@ -37,5 +37,11 @@ router.get('/api/product/:id', isAuth, isAdmin, getProductById);
 router.post('/api/product', isAuth, isAdmin, createProduct);
 router.put('/api/product/:id', isAuth, isAdmin, updateProduct);
 router.delete('/api/product/:id', isAuth, isAdmin, deleteProduct);
+router.get('/api/inventory', isAuth, isAdmin, getAllInventory);
+router.post('/api/inventory/:id', isAuth, isAdmin, updateInventory);
+router.delete('/api/inventory/:id', isAuth, isAdmin, deleteInventory);
+router.post('/api/inventory/bulk-update', isAuth, isAdmin, bulkUpdateInventory);
+router.get('/api/inventory/low-stock/:threshold', isAuth, isAdmin, getLowStockItems);
+
 
 module.exports = router;

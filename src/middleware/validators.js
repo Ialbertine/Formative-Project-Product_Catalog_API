@@ -16,7 +16,6 @@ const productSchema = Joi.object({
     'number.base': 'Product stock must be a number',
     'number.integer': 'Product stock must be an integer',
   }),
-  // Adding the missing fields that were causing validation errors
   image: Joi.string().messages({
     'string.base': 'Image must be a valid path string',
   }),
@@ -39,6 +38,9 @@ const productSchema = Joi.object({
 const categorySchema = Joi.object({
   name: Joi.string().required().messages({
     'string.empty': 'Category name is required',
+  }),
+  description: Joi.string().optional().allow('').messages({
+    'string.base': 'Category description must be a string',
   }),
 });
 
